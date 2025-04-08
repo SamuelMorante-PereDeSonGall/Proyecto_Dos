@@ -1,3 +1,5 @@
+import java.util.List;
+
 public class GestorVuelos {
-    Vuelo[] vuelos;
+    List<Vuelo> vuelos;
 }

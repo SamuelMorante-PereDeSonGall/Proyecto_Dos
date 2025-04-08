@@ -14,7 +14,6 @@ public class Main {
     private void metodoPrincipal() throws IOException {
 
         //ful.leer();
-
         textoInicial();
 
     }

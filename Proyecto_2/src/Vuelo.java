@@ -15,6 +15,7 @@ public class Vuelo implements Serializable {
     private LocalDateTime fechaLlegada;
     private int numPasajeros;
     private final int MAX_PASAJEROS;
+    //private int precio;
 
     public Vuelo(String id, Aeropuerto origen, Aeropuerto destino, LocalDateTime fechaSalida, LocalDateTime fechaLlegada, int MAX_PASAJEROS) {
         this.id = id;
@@ -24,6 +25,7 @@ public class Vuelo implements Serializable {
         this.fechaLlegada = fechaLlegada;
         numPasajeros = 0;
         this.MAX_PASAJEROS = MAX_PASAJEROS;
+        //this.precio = precio;
     }
 
     public Vuelo(String id, Aeropuerto origen, Aeropuerto destino, LocalDateTime fechaSalida, LocalDateTime fechaLlegada, int numPasajeros, int MAX_PASAJEROS) {
@@ -69,6 +71,8 @@ public class Vuelo implements Serializable {
         this.numPasajeros = numPasajeros;
     }
 
+
+    //!!!!!!!!!!!!Hacer un metodo separado pasar fecha por parametro
     public String toStringFecha(char c) {
         if (c == 'i'){return fechaSalida.getDayOfMonth()+"/"+ fechaSalida.getMonthValue()+"/"+ fechaSalida.getYear();}
         return fechaLlegada.getDayOfMonth()+"/"+ fechaLlegada.getMonthValue()+"/"+ fechaLlegada.getYear();
@@ -98,7 +102,7 @@ public class Vuelo implements Serializable {
             System.out.println("Mostrando vuelos a partir del " + dia + "/" + mes + "/" + year + ":");
             FicheroUsuariosLeer ful = new FicheroUsuariosLeer("vuelos.dat");
             List<Vuelo> vuelos = ful.leerObjetosVuelos();
-            //ordenarVuelosPorFechaSalida(vuelos);
+            ordenarVuelosPorFechaSalida(vuelos);
             for (Vuelo vuelo : vuelos) {
                 if (vuelo.getFechaSalida().equals(fecha) || vuelo.getFechaSalida().isAfter(fecha)) {
                     System.out.println(vuelo.infoVuelo());
@@ -119,7 +123,7 @@ public class Vuelo implements Serializable {
 
 }
 
-enum Aeropuerto {
+enum Aeropuerto implements Serializable {
     PMI("Mallorca"),
     MAD("Madrid"), // Madrid, España
     BCN("Barcelona"), // Barcelona, España
