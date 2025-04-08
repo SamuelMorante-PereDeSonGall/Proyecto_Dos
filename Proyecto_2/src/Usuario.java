@@ -22,7 +22,6 @@ public class Usuario implements Serializable {
         this.residente = residente;
         reservas = new Reserva[0];
         this.administrador = administrador;
-
     }
 
     //Getter y Setters
