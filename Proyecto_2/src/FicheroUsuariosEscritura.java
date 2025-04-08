@@ -1,7 +1,4 @@
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.util.List;
 
 /**
@@ -24,8 +21,15 @@ public class FicheroUsuariosEscritura {
      * @throws java.io.FileNotFoundException
      */
     public FicheroUsuariosEscritura(String nombreFichero) throws FileNotFoundException, IOException {
-        fos = new FileOutputStream(nombreFichero);
-        f = new ObjectOutputStream(fos);
+        File archivo = new File(nombreFichero);
+        fos = new FileOutputStream(archivo,true); //Modo append
+
+        if (archivo.length() == 0){
+            f = new ObjectOutputStream(fos);
+        }else {
+            f = new MiObjectOutputStream(fos);
+        }
+
     }
 
     /**
@@ -37,10 +41,22 @@ public class FicheroUsuariosEscritura {
     public void write(Usuario u) throws IOException {
         f.writeObject(u);
     }
+
+    public void write(Vuelo v) throws IOException {
+        f.writeObject(v);
+    }
+
     //Escribe en la lista resultado
-    public void writeLista(List<Usuario> listaResultados) throws IOException {
+    public void writeListaUsuario(List<Usuario> listaResultados) throws IOException {
         for (Usuario usuario : listaResultados) {
             f.writeObject(usuario);
+        }
+    }
+
+    //Escribe en la lista resultado
+    public void writeListaVuelo(List<Vuelo> listaResultados) throws IOException {
+        for (Vuelo vuelo : listaResultados) {
+            f.writeObject(vuelo);
         }
     }
 
@@ -50,5 +66,16 @@ public class FicheroUsuariosEscritura {
      */
     public void close() throws IOException {
         f.close();
+    }
+}
+
+    class MiObjectOutputStream extends ObjectOutputStream {
+    public MiObjectOutputStream(OutputStream out) throws IOException {
+        super(out);
+    }
+
+    @Override
+    protected void writeStreamHeader() throws IOException {
+        reset(); // No escribe cabecera
     }
 }

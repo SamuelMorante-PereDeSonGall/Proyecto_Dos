@@ -22,7 +22,9 @@ class FicheroUsuariosLeer {
     private final FileInputStream fis;
     private final ObjectInputStream f;
     private String nombre = "";
-    private List<Usuario> listaResultados;
+    private List<Usuario> listaUsuarios;
+    private List<Vuelo> listaVuelos;
+
 
     /**
      * Constructor del fichero con el nombre del fichero
@@ -33,7 +35,8 @@ class FicheroUsuariosLeer {
         fis = new FileInputStream(nombreFichero);
         f = new ObjectInputStream(fis);
         nombre = nombreFichero;
-        listaResultados = new ArrayList<>();
+        listaUsuarios = new ArrayList<>();
+        listaVuelos = new ArrayList<>();
     }
 
     /**
@@ -62,13 +65,13 @@ class FicheroUsuariosLeer {
     }
 
     //Lee los objetos de la lista resultados
-    public List<Usuario> leerObjetosLista() {
+    public List<Usuario> leerObjetosUsuarios() {
         try {
-            listaResultados.clear();
+            listaUsuarios.clear();
             while (true) {
                 try {
                     Usuario usuario = (Usuario) f.readObject();
-                    listaResultados.add(usuario);
+                    listaUsuarios.add(usuario);
                 } catch (EOFException ex) {
                     break;
                 } catch (ClassNotFoundException ex) {
@@ -87,7 +90,36 @@ class FicheroUsuariosLeer {
                 }
             }
         }
-        return listaResultados;
+        return listaUsuarios;
+    }
+
+    //Lee los objetos de la lista resultados
+    public List<Vuelo> leerObjetosVuelos() {
+        try {
+            listaVuelos.clear();
+            while (true) {
+                try {
+                    Vuelo vuelo = (Vuelo) f.readObject();
+                    listaVuelos.add(vuelo);
+                } catch (EOFException ex) {
+                    break;
+                } catch (ClassNotFoundException ex) {
+                    System.out.println("ERROR: Clase no encontrada al leer el archivo");
+                    break;
+                }
+            }
+        } catch (IOException ex) {
+            System.out.println("ERROR de E/S al leer el archivo");
+        } finally {
+            if (f != null) {
+                try {
+                    f.close();
+                } catch (IOException ex) {
+                    System.out.println("ERROR al cerrar el archivo");
+                }
+            }
+        }
+        return listaVuelos;
     }
 
     /**
