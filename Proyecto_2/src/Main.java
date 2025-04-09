@@ -20,7 +20,7 @@ public class Main {
 
     private void textoInicial() throws IOException {
         int opcion = 0;
-        while(opcion != 3){
+        while (opcion != 3) {
             System.out.println("Bienvenido a SkyPauScanner");
             System.out.println("¿Qué desea hacer?");
             System.out.println("1 - Crear usuario");
@@ -28,7 +28,7 @@ public class Main {
             System.out.println("3 - Salir");
             System.out.println("--------------------------");
             opcion = pedirInt();
-            switch(opcion){
+            switch (opcion) {
                 case 1:
                     Usuario usuario = Usuario.crearUsuario();
                     if (usuario != null) {
@@ -40,7 +40,9 @@ public class Main {
                     break;
                 case 2:
                     usuario = Usuario.iniciarSesion();
-                    if (usuario != null){menuNormal(usuario);}
+                    if (usuario != null) {
+                        menuNormal(usuario);
+                    }
                     break;
                 default:
                     System.out.println("ADIÓS");
@@ -51,15 +53,15 @@ public class Main {
 
     private void menuNormal(Usuario usuario) throws IOException {
         int opcion = 0;
-        while(opcion != 8){
+        while (opcion != 8) {
             System.out.println("--------------------------");
-            System.out.println("Bienvenido "+usuario.getNombre());
+            System.out.println("Bienvenido " + usuario.getNombre());
             System.out.println("¿Qué desea hacer?");
             System.out.println("1 - Reservar un vuelo");
             System.out.println("2 - Consultar vuelos reservados");
             System.out.println("3 - Cancelar una reserva");
             System.out.println("4 - Consultar vuelos disponibles, por dia y por semana");
-            if(usuario.getAdministrador()){
+            if (usuario.getAdministrador()) {
                 System.out.println("5. Añadir vuelos disponibles");
                 System.out.println("6. Generar vuelos de forma aleatória");
                 System.out.println("7. Enviar notificaciones a un usuario");
@@ -67,19 +69,29 @@ public class Main {
             }
             System.out.println("--------------------------");
             opcion = pedirInt();
-            if (!usuario.getAdministrador() && opcion > 4){opcion=8;}
-            switch(opcion){
+            if (!usuario.getAdministrador() && opcion > 4) {
+                opcion = 8;
+            }
+            switch (opcion) {
                 case 1:
                     break;
                 case 2:
                     Reserva[] reservas = usuario.getReservas();
-                    for (int i=0; i<reservas.length; i++){
+                    for (int i = 0; i < reservas.length; i++) {
                         System.out.println(reservas[i]);
                     }
                     break;
                 case 3:
                     break;
                 case 4:
+//                    Scanner sc = new Scanner(System.in);
+//                    System.out.println("Introduce el día:");
+//                    int dia = sc.nextInt();
+//                    System.out.println("Introduce el mes:");
+//                    int mes = sc.nextInt();
+//                    System.out.println("Introduce el año:");
+//                    int anio = sc.nextInt();
+//                    Vuelo.mostrarVuelosSemana(dia, mes, anio);
                     Vuelo.mostrarVuelos();
                     break;
                 case 5:
@@ -87,6 +99,7 @@ public class Main {
                 case 6:
                     break;
                 case 7:
+                    enviarNotificacion();
                     break;
                 default:
                     System.out.println("ADIÓS");
@@ -95,44 +108,81 @@ public class Main {
         }
     }
 
-    public static boolean opcion(char c){
+    public static void enviarNotificacion() {
+        int opcion = 0;
+        while (opcion != 3) {
+            System.out.println("--------------------------");
+            System.out.println("¿Qué tipo de notificacion quiere enviar?");
+            System.out.println("1 - SMS");
+            System.out.println("2 - Email");
+            System.out.println("3 - Salir de esta opcion");
+            System.out.println("--------------------------");
+            opcion = pedirInt();
+            if (opcion > 2) {
+                opcion = 3;
+            }
+            Notificacion notificacion;
+            String destinatario;
+            String mensaje;
+            switch (opcion) {
+                case 1:
+                    notificacion = new NotificacionSMS();
+                    System.out.println("Escribe el numero de telefono del Usuario");
+                     destinatario = pedirString();
+                    System.out.println("Escribe el mensaje que le quieres enviar");
+                     mensaje = pedirString();
+                    notificacion.enviarNotificacion(destinatario,mensaje);
+                    break;
+                case 2:
+                    notificacion = new NotificacionEmail();
+                    System.out.println("Escribe el correo del Usuario");
+                     destinatario = pedirString();
+                    System.out.println("Escribe el mensaje que le quieres enviar");
+                     mensaje = pedirString();
+                    notificacion.enviarNotificacion(destinatario,mensaje);
+                    break;
+                default:
+                    opcion = 3;
+            }
+        }
+    }
+
+    public static boolean opcion(char c) {
         if (c == 's' || c == 'S') return true;
         if (c == 'n' || c == 'N') return false;
         return opcion(c);
     }
 
-    public static String pedirString(){
+    public static String pedirString() {
         Scanner sc = new Scanner(System.in);
-        try{
+        try {
             return sc.nextLine();
-        }catch (InputMismatchException e){
+        } catch (InputMismatchException e) {
             return "error";
         }
     }
 
-    public static int pedirInt(){
+    public static int pedirInt() {
         Scanner sc = new Scanner(System.in);
-        try{
+        try {
             return sc.nextInt();
-        }catch (InputMismatchException e){
+        } catch (InputMismatchException e) {
             return -999;
         }
     }
 
-    public static char pedirCar(){
+    public static char pedirCar() {
         Scanner sc = new Scanner(System.in);
-        try{
+        try {
             return sc.next().charAt(0);
-        }catch (InputMismatchException e){
+        } catch (InputMismatchException e) {
             return 'e';
         }
     }
 
 
-
-
     //INCLUIR PRIMEROS VUELOS AL DOCUMENTO LUEGO NO USAR
-    private Vuelo[] meterVuelos(){
+    private Vuelo[] meterVuelos() {
         Vuelo[] vuelos = new Vuelo[30];
 
         // Asignar los vuelos a las posiciones del array

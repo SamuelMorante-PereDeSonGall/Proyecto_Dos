@@ -1,6 +1,8 @@
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.time.DateTimeException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
@@ -115,6 +117,27 @@ public class Vuelo implements Serializable {
             System.out.println("Fecha inválida");
         }
     }
+
+    public static void mostrarVuelosSemana(int dia, int mes, int anyo) {
+        try {
+            LocalDate fechaInicio = LocalDate.of(anyo, mes, dia);
+            LocalDate fechaFin = fechaInicio.plusDays(7);
+            FicheroUsuariosLeer ful = new FicheroUsuariosLeer("vuelos.dat");
+            List<Vuelo> vuelos = ful.leerObjetosVuelos();
+            ordenarVuelosPorFechaSalida(vuelos);
+            for (Vuelo vuelo : vuelos) {
+                LocalDate fechaVuelo = vuelo.getFechaSalida().toLocalDate();
+                if (!fechaVuelo.isBefore(fechaInicio) && !fechaVuelo.isAfter(fechaFin)) {
+                    System.out.println(vuelo.infoVuelo());
+                }
+            }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException("Archivo de vuelos no encontrado", e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     public static void ordenarVuelosPorFechaSalida(List<Vuelo> vuelos) {
         vuelos.sort(Comparator.comparing(Vuelo::getFechaSalida));
