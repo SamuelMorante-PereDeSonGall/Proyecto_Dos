@@ -76,14 +76,16 @@ public class Main {
                 case 1:
                     break;
                 case 2:
-                    Reserva[] reservas = usuario.getReservas();
-                    for (int i = 0; i < reservas.length; i++) {
-                        System.out.println(reservas[i]);
-                    }
+                    consultarReservas(usuario);
+//                    Reserva[] reservas = usuario.getReservas();
+//                    for (int i = 0; i < reservas.length; i++) {
+//                        System.out.println(reservas[i]);
+//                    }
                     break;
                 case 3:
                     break;
                 case 4:
+                    consultarVuelosDiaSemana();
 //                    Scanner sc = new Scanner(System.in);
 //                    System.out.println("Introduce el día:");
 //                    int dia = sc.nextInt();
@@ -92,7 +94,7 @@ public class Main {
 //                    System.out.println("Introduce el año:");
 //                    int anio = sc.nextInt();
 //                    Vuelo.mostrarVuelosSemana(dia, mes, anio);
-                    Vuelo.mostrarVuelos();
+//                    Vuelo.mostrarVuelos();
                     break;
                 case 5:
                     break;
@@ -104,6 +106,36 @@ public class Main {
                 default:
                     System.out.println("ADIÓS");
                     opcion = 8;
+            }
+        }
+    }
+
+    public static void consultarVuelosDiaSemana() {
+        int opciones = 0;
+        while (opciones != 3) {
+            System.out.println("--------------------------");
+            System.out.println("Consultar Vuelos");
+            System.out.println("1 - Dia");
+            System.out.println("2 - Semana");
+            System.out.println("3 - Salir de esta opcion");
+            System.out.println("--------------------------");
+            opciones = pedirInt();
+            if (opciones > 2) {
+                opciones = 3;
+            }
+            Notificacion notificacion;
+            String destinatario;
+            String mensaje;
+            switch (opciones) {
+                case 1:
+                    GestorVuelos gestor = new GestorVuelos();
+                    gestor.mostrarVuelos();
+                    break;
+                case 2:
+
+                    break;
+                default:
+                    opciones = 3;
             }
         }
     }
@@ -177,6 +209,19 @@ public class Main {
             return sc.next().charAt(0);
         } catch (InputMismatchException e) {
             return 'e';
+        }
+    }
+
+    public void consultarReservas(Usuario usuario){
+        System.out.println("--------------------------");
+        Reserva[] reservas = usuario.getReservas();
+        if (reservas == null || reservas.length == 0) {
+            System.out.println("No tienes reservas.");
+        } else {
+            System.out.println("Las reservas son: ");
+            for (int i = 0; i < reservas.length; i++) {
+                System.out.println(reservas[i]);
+            }
         }
     }
 

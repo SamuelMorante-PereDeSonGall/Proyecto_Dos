@@ -17,9 +17,9 @@ public class Vuelo implements Serializable {
     private LocalDateTime fechaLlegada;
     private int numPasajeros;
     private final int MAX_PASAJEROS;
-    //private int precio;
+    private double precio;
 
-    public Vuelo(String id, Aeropuerto origen, Aeropuerto destino, LocalDateTime fechaSalida, LocalDateTime fechaLlegada, int MAX_PASAJEROS) {
+    public Vuelo(String id, Aeropuerto origen, Aeropuerto destino, LocalDateTime fechaSalida, LocalDateTime fechaLlegada, int MAX_PASAJEROS, double precio) {
         this.id = id;
         this.origen = origen;
         this.destino = destino;
@@ -27,10 +27,10 @@ public class Vuelo implements Serializable {
         this.fechaLlegada = fechaLlegada;
         numPasajeros = 0;
         this.MAX_PASAJEROS = MAX_PASAJEROS;
-        //this.precio = precio;
+        this.precio = precio;
     }
 
-    public Vuelo(String id, Aeropuerto origen, Aeropuerto destino, LocalDateTime fechaSalida, LocalDateTime fechaLlegada, int numPasajeros, int MAX_PASAJEROS) {
+    public Vuelo(String id, Aeropuerto origen, Aeropuerto destino, LocalDateTime fechaSalida, LocalDateTime fechaLlegada, int numPasajeros, int MAX_PASAJEROS, double precio) {
         this.id = id;
         this.origen = origen;
         this.destino = destino;
@@ -38,6 +38,7 @@ public class Vuelo implements Serializable {
         this.fechaLlegada = fechaLlegada;
         this.numPasajeros = numPasajeros;
         this.MAX_PASAJEROS = MAX_PASAJEROS;
+        this.precio = precio;
     }
 
     //Getters y Setters
@@ -90,33 +91,33 @@ public class Vuelo implements Serializable {
                 " "+toStringFecha('v')+" "+toStringHorario('v');
     }
 
-    public static void mostrarVuelos() {
-        System.out.println("---Selecciona fecha--- ");
-        System.out.println("Introduce el día: ");
-        int dia = Main.pedirInt();
-        System.out.println("Introduce el mes: ");
-        int mes = Main.pedirInt();
-        System.out.println("Introduce el año: ");
-        int year = Main.pedirInt();
-        LocalDateTime fecha = null;
-        try {
-            fecha = LocalDateTime.of(year, mes, dia, 0, 0);
-            System.out.println("Mostrando vuelos a partir del " + dia + "/" + mes + "/" + year + ":");
-            FicheroUsuariosLeer ful = new FicheroUsuariosLeer("vuelos.dat");
-            List<Vuelo> vuelos = ful.leerObjetosVuelos();
-            ordenarVuelosPorFechaSalida(vuelos);
-            for (Vuelo vuelo : vuelos) {
-                if (vuelo.getFechaSalida().equals(fecha) || vuelo.getFechaSalida().isAfter(fecha)) {
-                    System.out.println(vuelo.infoVuelo());
-                }
-            }
-            ful.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (DateTimeException e){
-            System.out.println("Fecha inválida");
-        }
-    }
+//    public static void mostrarVuelos() {
+//        System.out.println("---Selecciona fecha--- ");
+//        System.out.println("Introduce el día: ");
+//        int dia = Main.pedirInt();
+//        System.out.println("Introduce el mes: ");
+//        int mes = Main.pedirInt();
+//        System.out.println("Introduce el año: ");
+//        int year = Main.pedirInt();
+//        LocalDateTime fecha = null;
+//        try {
+//            fecha = LocalDateTime.of(year, mes, dia, 0, 0);
+//            System.out.println("Mostrando vuelos a partir del " + dia + "/" + mes + "/" + year + ":");
+//            FicheroUsuariosLeer ful = new FicheroUsuariosLeer("vuelos.dat");
+//            List<Vuelo> vuelos = ful.leerObjetosVuelos();
+//            ordenarVuelosPorFechaSalida(vuelos);
+//            for (Vuelo vuelo : vuelos) {
+//                if (vuelo.getFechaSalida().equals(fecha) || vuelo.getFechaSalida().isAfter(fecha)) {
+//                    System.out.println(vuelo.infoVuelo());
+//                }
+//            }
+//            ful.close();
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        } catch (DateTimeException e){
+//            System.out.println("Fecha inválida");
+//        }
+//    }
 
     public static void mostrarVuelosSemana(int dia, int mes, int anyo) {
         try {
