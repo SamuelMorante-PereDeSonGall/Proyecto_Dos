@@ -13,7 +13,7 @@ import java.util.logging.Logger;
  *
  * @author Samuel Morante Pioreck
  */
-class FicheroUsuariosLeer {
+class FicheroObjetosLeer {
 
     /**
      * Los atributos de la clase son el flujo de entrada de ficheros y de objetos
@@ -31,7 +31,7 @@ class FicheroUsuariosLeer {
      *
      * @param nombreFichero
      */
-    public FicheroUsuariosLeer(String nombreFichero) throws FileNotFoundException, IOException {
+    public FicheroObjetosLeer(String nombreFichero) throws FileNotFoundException, IOException {
         fis = new FileInputStream(nombreFichero);
         f = new ObjectInputStream(fis);
         nombre = nombreFichero;
@@ -59,13 +59,13 @@ class FicheroUsuariosLeer {
         } catch (ClassNotFoundException ex) {
             System.out.println("ERROR de classe llegint fitxer de jugadors");
         } catch (IOException ex) {
-            Logger.getLogger(FicheroUsuariosLeer.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FicheroObjetosLeer.class.getName()).log(Level.SEVERE, null, ex);
         }
         return s;
     }
 
     //Lee los objetos de la lista resultados
-    public List<Usuario> leerObjetosUsuarios() {
+    public Usuario[] cargarUsuarios() {
         try {
             listaUsuarios.clear();
             while (true) {
@@ -81,6 +81,7 @@ class FicheroUsuariosLeer {
             }
         } catch (IOException ex) {
             System.out.println("ERROR de E/S al leer el archivo");
+            ex.printStackTrace();
         } finally {
             if (f != null) {
                 try {
@@ -90,8 +91,42 @@ class FicheroUsuariosLeer {
                 }
             }
         }
-        return listaUsuarios;
+
+        return listaUsuarios.toArray(new Usuario[0]);
     }
+
+    //Lee los objetos de la lista resultados
+    public Vuelo[] cargarVuelos() {
+        try {
+            listaVuelos.clear();
+            while (true) {
+                try {
+                    Vuelo vuelo = (Vuelo) f.readObject();
+                    listaVuelos.add(vuelo);
+                } catch (EOFException ex) {
+                    break;
+                } catch (ClassNotFoundException ex) {
+                    System.out.println("ERROR: Clase no encontrada al leer el archivo");
+                    break;
+                }
+            }
+        } catch (IOException ex) {
+            System.out.println("ERROR de E/S al leer el archivo");
+            ex.printStackTrace();
+        } finally {
+            if (f != null) {
+                try {
+                    f.close();
+                } catch (IOException ex) {
+                    System.out.println("ERROR al cerrar el archivo");
+                }
+            }
+        }
+
+        return listaVuelos.toArray(new Vuelo[0]);
+    }
+
+
 
     //Lee los objetos de la lista resultados
     public List<Vuelo> leerObjetosVuelos() {
@@ -110,6 +145,7 @@ class FicheroUsuariosLeer {
             }
         } catch (IOException ex) {
             System.out.println("ERROR de E/S al leer el archivo");
+            ex.printStackTrace();
         } finally {
             if (f != null) {
                 try {

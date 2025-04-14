@@ -24,14 +24,18 @@ public class Reserva implements Serializable {
     }
 
     public String mostrarReserva() {
-        return "Número de la reserva: " + id + "Vuelo: " + vuelo;
+        return "Número de la reserva: " + id + " " + vuelo.infoVuelo();
+    }
+
+    public static String crearIDAleatorio(){
+        int numero = (int)(Math.random() * 100000); // número entre 0 y 99999
+        return String.format("%05d", numero);
     }
 
     @Override
     public String toString() {
-        return "Reserva{" +
-                "ID: '" + id + '\'' +
-                ", usuario=" + usuario.getNombre() +
+        return "{" +
+                "ID reserva: '" + id + '\'' +
                 ", vuelo=" + vuelo +
                 '}';
     }

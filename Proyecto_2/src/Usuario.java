@@ -1,5 +1,8 @@
 import java.io.IOException;
+import java.io.Serial;
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 public class Usuario implements Serializable {
@@ -10,6 +13,8 @@ public class Usuario implements Serializable {
     private boolean residente;
     private Reserva[] reservas;
     private boolean administrador;
+    @Serial
+    private static final long serialVersionUID = 1621303937345875877L;
 
     //Constructores
     public Usuario(){}
@@ -71,6 +76,35 @@ public class Usuario implements Serializable {
         this.reservas = reservas;
     }
 
+    public String addReserva(String idVuelo, GestorVuelos gv) {
+        Vuelo[] vuelos = gv.getVuelos();
+        for (int i=0; i<vuelos.length; i++){
+            if (vuelos[i].getId().equals(idVuelo)){
+                Vuelo vueloEscogido = vuelos[i];
+                Reserva reserva = new Reserva(Reserva.crearIDAleatorio(),this,vueloEscogido);
+                //Crea el array más grande
+                reservas = Arrays.copyOf(reservas, reservas.length + 1);
+                //Introduce la reserva al usuario
+                reservas[reservas.length-1] = reserva;
+                //Para el bucle
+                return "Vuelo reservado correctamente.";
+            }
+        }
+        return "Vuelo no existe.";
+    }
+
+    public String cancelarReserva(String idReserva, GestorVuelos gv) {
+        for (int i=0; i<reservas.length; i++){
+            if (reservas[i].getId().equals(idReserva)){
+                reservas[i] = reservas[reservas.length-1];
+                reservas = Arrays.copyOf(reservas, reservas.length - 1);
+                Arrays.sort(reservas, Comparator.comparing(r -> r.getVuelo().getFechaSalida()));
+                return "Reserva cancelada correctamente.";
+            }
+        }
+        return "Reserva no existe.";
+    }
+
     //Metodo toString
     @Override
     public String toString() {
@@ -82,53 +116,17 @@ public class Usuario implements Serializable {
                 '}';
     }
 
-    public static Usuario iniciarSesion() throws IOException {
-        System.out.println("Nombre: ");
-        String nombre = Main.pedirString();
-        System.out.println("Password: ");
-        String password = Main.pedirString();
-        Usuario usuario = comprobarUsuario(nombre, password);
-        if (usuario != null ) {
-            return usuario;
-        }else {
-            System.out.println("EL NOMBRE O LA CONTRASEÑA SON INCORRECTAS");
-            return null;
-        }
-    }
-
-
-    public static Usuario crearUsuario() throws IOException {
-        System.out.println("Nombre: ");
-        String nombre = Main.pedirString();
-        System.out.println("Apellidos: ");
-        String apellido = Main.pedirString();
-        System.out.println("DNI: ");
-        String dni = Main.pedirString();
-        System.out.println("¿Es usted residente en Mallorca? s/n");
-        boolean residente = Main.opcion(Main.pedirCar());
-        System.out.println("Contraseña: ");
-        String password = Main.pedirString();
-        System.out.println("¿Eres administrador de SkyPauScanner? s/n");
-        boolean administrador = Main.opcion(Main.pedirCar());
-        Usuario usuario = new Usuario(nombre,apellido,dni,password,residente, administrador);
-        if (comprobarUsuario(nombre,password) != null) {
-            System.out.println("YA EXISTE EL USUARIO");
-            return null;
-        }else {return usuario;}
-
-    }
-
-    private static Usuario comprobarUsuario(String nombre, String password) throws IOException {
-        FicheroUsuariosLeer ful = new FicheroUsuariosLeer("usuarios.dat");
-        List<Usuario> usuarios = ful.leerObjetosUsuarios();
-        for (int i=0; i<usuarios.size(); i++){
-            if (usuarios.get(i).getNombre().equals(nombre)){
-                if (usuarios.get(i).getPassword().equals(password)){return usuarios.get(i);}
+    //Metodo que consulta las Reservas de un usuario
+    public String consultarReservas(){
+        System.out.println("\n--------------------------");
+        if (reservas == null || reservas.length == 0) {
+            return "No tienes reservas.";
+        } else {
+            String res = "";
+            for (int i=0; i<reservas.length; i++){
+                res += reservas[i].mostrarReserva()+"\n";
             }
+            return res;
         }
-        ful.close();
-        return null;
     }
-
-
 }
