@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -75,55 +73,48 @@ public class Vuelo implements Serializable {
     }
 
 
-    //!!!!!!!!!!!!Hacer un metodo separado pasar fecha por parametro
-    public String toStringFecha(char c) {
-        if (c == 'i'){return fechaSalida.getDayOfMonth()+"/"+ fechaSalida.getMonthValue()+"/"+ fechaSalida.getYear();}
-        return fechaLlegada.getDayOfMonth()+"/"+ fechaLlegada.getMonthValue()+"/"+ fechaLlegada.getYear();
-    }
-
-    public String toStringHorario(char c) {
-        if (c == 'i'){return fechaSalida.getHour()+":"+ fechaSalida.getMinute();}
-        return fechaLlegada.getHour()+":"+ fechaLlegada.getMinute();
+    public String toStringFecha(LocalDateTime fecha){
+        return fecha.getDayOfMonth()+"/"+ fecha.getMonthValue()+"/"+ fecha.getYear()+" "+fecha.getHour()+":"+ fecha.getMinute();
     }
 
     public String infoVuelo(){
-        return "Vuelo "+id+" "+toStringFecha('i')+" "+toStringHorario('i')+" "+origen+"-"+destino+
-                " "+toStringFecha('v')+" "+toStringHorario('v');
+        return "Vuelo "+id+" "+toStringFecha(fechaSalida)+" "+origen+"-"+destino+
+                " "+toStringFecha(fechaLlegada);
     }
 
-//    public static void mostrarVuelos() {
-//        System.out.println("---Selecciona fecha--- ");
-//        System.out.println("Introduce el día: ");
-//        int dia = Main.pedirInt();
-//        System.out.println("Introduce el mes: ");
-//        int mes = Main.pedirInt();
-//        System.out.println("Introduce el año: ");
-//        int year = Main.pedirInt();
-//        LocalDateTime fecha = null;
-//        try {
-//            fecha = LocalDateTime.of(year, mes, dia, 0, 0);
-//            System.out.println("Mostrando vuelos a partir del " + dia + "/" + mes + "/" + year + ":");
-//            FicheroUsuariosLeer ful = new FicheroUsuariosLeer("vuelos.dat");
-//            List<Vuelo> vuelos = ful.leerObjetosVuelos();
-//            ordenarVuelosPorFechaSalida(vuelos);
-//            for (Vuelo vuelo : vuelos) {
-//                if (vuelo.getFechaSalida().equals(fecha) || vuelo.getFechaSalida().isAfter(fecha)) {
-//                    System.out.println(vuelo.infoVuelo());
-//                }
-//            }
-//            ful.close();
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        } catch (DateTimeException e){
-//            System.out.println("Fecha inválida");
-//        }
-//    }
+    public static void mostrarVuelos() {
+        System.out.println("---Selecciona fecha--- ");
+        System.out.println("Introduce el día: ");
+        int dia = Main.pedirInt();
+        System.out.println("Introduce el mes: ");
+        int mes = Main.pedirInt();
+        System.out.println("Introduce el año: ");
+        int year = Main.pedirInt();
+        LocalDateTime fecha = null;
+        try {
+            fecha = LocalDateTime.of(year, mes, dia, 0, 0);
+            System.out.println("Mostrando vuelos a partir del " + dia + "/" + mes + "/" + year + ":");
+            FicheroObjetosLeer ful = new FicheroObjetosLeer("vuelos.dat");
+            List<Vuelo> vuelos = ful.leerObjetosVuelos();
+            ordenarVuelosPorFechaSalida(vuelos);
+            for (Vuelo vuelo : vuelos) {
+                if (vuelo.getFechaSalida().equals(fecha) || vuelo.getFechaSalida().isAfter(fecha)) {
+                    System.out.println(vuelo.infoVuelo());
+                }
+            }
+            ful.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (DateTimeException e){
+            System.out.println("Fecha inválida");
+        }
+    }
 
     public static void mostrarVuelosSemana(int dia, int mes, int anyo) {
         try {
             LocalDate fechaInicio = LocalDate.of(anyo, mes, dia);
             LocalDate fechaFin = fechaInicio.plusDays(7);
-            FicheroUsuariosLeer ful = new FicheroUsuariosLeer("vuelos.dat");
+            FicheroObjetosLeer ful = new FicheroObjetosLeer("vuelos.dat");
             List<Vuelo> vuelos = ful.leerObjetosVuelos();
             ordenarVuelosPorFechaSalida(vuelos);
             for (Vuelo vuelo : vuelos) {
@@ -145,6 +136,13 @@ public class Vuelo implements Serializable {
     }
 
 
+    public double getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(double precio) {
+        this.precio = precio;
+    }
 }
 
 enum Aeropuerto implements Serializable {
