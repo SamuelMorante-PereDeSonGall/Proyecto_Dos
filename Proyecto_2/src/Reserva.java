@@ -4,11 +4,19 @@ public class Reserva implements Serializable {
     private String id;
     private Usuario usuario;
     private Vuelo vuelo;
+    private  double precioFinal;
 
     public Reserva(String id, Usuario usuario, Vuelo vuelo) {
         this.id = id;
         this.usuario = usuario;
         this.vuelo = vuelo;
+    }
+
+    public Reserva(String id, Usuario usuario, Vuelo vuelo, double precioFinal) {
+        this.id = id;
+        this.usuario = usuario;
+        this.vuelo = vuelo;
+        this.precioFinal = precioFinal;
     }
 
     public String getId() {
@@ -24,7 +32,7 @@ public class Reserva implements Serializable {
     }
 
     public String mostrarReserva() {
-        return "Número de la reserva: " + id + " " + vuelo.infoVuelo();
+        return "Número de la reserva: " + id + " | " + vuelo.infoVuelo() + " | Precio pagado: " + precioFinal + "€";
     }
 
     public static String crearIDAleatorio(){
@@ -32,7 +40,6 @@ public class Reserva implements Serializable {
         return String.format("%05d", numero);
     }
 
-    @Override
     public String toString() {
         return "{" +
                 "ID reserva: '" + id + '\'' +
