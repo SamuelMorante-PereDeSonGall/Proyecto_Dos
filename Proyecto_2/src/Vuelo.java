@@ -77,9 +77,9 @@ public class Vuelo implements Serializable {
         return fecha.getDayOfMonth()+"/"+ fecha.getMonthValue()+"/"+ fecha.getYear()+" "+fecha.getHour()+":"+ fecha.getMinute();
     }
 
-    public String infoVuelo(){
-        return "Vuelo "+id+" "+toStringFecha(fechaSalida)+" "+origen+"-"+destino+
-                " "+toStringFecha(fechaLlegada);
+    public String infoVuelo() {
+        return "Vuelo " + id + " | Origen: " + origen + " | Destino: " + destino + " | Fecha salida: " + toStringFecha(fechaSalida) +
+                " | Fecha llegada: " + toStringFecha(fechaLlegada);
     }
 
     public static void mostrarVuelos() {

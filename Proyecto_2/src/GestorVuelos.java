@@ -129,7 +129,8 @@ public class GestorVuelos {
     public void mostrarVuelosPosteriores(LocalDateTime fecha){
         ordenarVuelosFecha();
         for (Vuelo vuelo : vuelos) {
-            if (vuelo.getFechaSalida().isAfter(fecha) || vuelo.getFechaSalida().isEqual(fecha)) {
+            if ((vuelo.getFechaSalida().isAfter(fecha) || vuelo.getFechaSalida().isEqual(fecha)) &&
+                    vuelo.getNumPasajeros() < vuelo.getMAX_PASAJEROS()) {
                 System.out.println(vuelo.infoVuelo());
             }
         }
