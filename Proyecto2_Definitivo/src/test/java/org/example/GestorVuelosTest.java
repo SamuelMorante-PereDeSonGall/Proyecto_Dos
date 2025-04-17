@@ -2,9 +2,8 @@ package org.example;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -96,5 +95,51 @@ class GestorVuelosTest {
         assertEquals(vuelo3, vuelosOrdenar[1]);
         assertEquals(vuelo1, vuelosOrdenar[2]);
     }
+
+    @Test
+    void calcularLunesSemanaTest() throws IOException {
+        GestorVuelos gestor = new GestorVuelos();
+
+        // Semana 1 de 2025 comienza el lunes 30 de diciembre de 2024 (según ISO-8601)
+        LocalDateTime esperado = LocalDateTime.of(2024, 12, 30, 0, 0);
+        LocalDateTime resultado = gestor.calcularLunesSemana(1);
+
+        assertEquals(esperado, resultado, "El lunes de la semana 1 debería ser 30/12/2024 a las 00:00");
+    }
+
+    @Test
+    void testMostrarVuelosPosteriores() throws Exception {
+        // Preparar vuelos
+        LocalDateTime ahora = LocalDateTime.of(2025, 4, 17, 12, 0);
+
+        Vuelo vuelo1 = new Vuelo("V001", Aeropuerto.MAD, Aeropuerto.BCN,
+                ahora.minusDays(1), ahora.minusDays(1).plusHours(2), 10, 100, 50);
+        Vuelo vuelo2 = new Vuelo("V002", Aeropuerto.MAD, Aeropuerto.BCN,
+                ahora.plusDays(1), ahora.plusDays(1).plusHours(2), 20, 100, 60);
+        Vuelo vuelo3 = new Vuelo("V003", Aeropuerto.MAD, Aeropuerto.BCN,
+                ahora.plusDays(2), ahora.plusDays(2).plusHours(2), 100, 100, 70); // lleno
+
+        // Instanciar GestorVuelos
+        GestorVuelos gestor = new GestorVuelos();
+
+        // Usar reflexión para inyectar los vuelos en el campo privado
+        Field vuelosField = GestorVuelos.class.getDeclaredField("vuelos");
+        vuelosField.setAccessible(true);
+        vuelosField.set(gestor, new Vuelo[]{vuelo1, vuelo2, vuelo3});
+
+        // Capturar salida del sistema
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outContent));
+
+        gestor.mostrarVuelosPosteriores(ahora);
+
+        System.setOut(System.out); // Restaurar
+
+        String salida = outContent.toString();
+        assertTrue(salida.contains("V002"));
+        assertFalse(salida.contains("V001"));
+        assertFalse(salida.contains("V003"));
+    }
+
 
 }
